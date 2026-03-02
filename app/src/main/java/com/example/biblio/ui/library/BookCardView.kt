@@ -36,7 +36,7 @@ class BookCardView @JvmOverloads constructor(
         title.text       = book.title
         authorPages.text = "${book.author} - ${book.pages} páginas"
         status.text      = book.status
-        rating.rating    = book.rating
+        rating.rating    = (book.rating ?: 0).toFloat()
         cover.load(book.coverUrl) {
             placeholder(R.drawable.ic_book_24)
             error(R.drawable.ic_book_24)

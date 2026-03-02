@@ -6,9 +6,14 @@ import com.example.biblio.model.Book
 import com.example.biblio.ui.library.BookCardView
 
 class BookAdapter(
-    private val books: List<Book>,
+    private var books: List<Book>,
     private val onBookClick: (Book) -> Unit
 ) : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
+
+    fun updateBooks(newBooks: List<Book>) {
+        books = newBooks
+        notifyDataSetChanged()
+    }
 
     inner class BookViewHolder(private val card: BookCardView) : RecyclerView.ViewHolder(card) {
         fun bind(book: Book) {
