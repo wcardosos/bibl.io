@@ -18,7 +18,7 @@ class AllBooksTabFragment : Fragment(R.layout.fragment_all_books_tab) {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val viewModel = ViewModelProvider(this)[BookViewModel::class.java]
+        val viewModel = ViewModelProvider(requireActivity())[BookViewModel::class.java]
         viewModel.books.observe(viewLifecycleOwner) { books ->
             adapter.updateBooks(books)
         }
