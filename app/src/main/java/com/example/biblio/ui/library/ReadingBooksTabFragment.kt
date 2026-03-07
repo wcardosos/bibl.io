@@ -17,7 +17,13 @@ class ReadingBooksTabFragment : Fragment(R.layout.fragment_reading_books_tab) {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         val emptyState = view.findViewById<TextView>(R.id.empty_state)
-        val adapter = BookAdapter(emptyList()) { }
+        val adapter = BookAdapter(emptyList()) { book ->
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .add(R.id.detail_container, BookDetailFragment.newInstance(book))
+                .addToBackStack(null)
+                .commit()
+        }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 

@@ -14,7 +14,13 @@ class AllBooksTabFragment : Fragment(R.layout.fragment_all_books_tab) {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
-        val adapter = BookAdapter(emptyList()) { /* ação ao clicar no card */ }
+        val adapter = BookAdapter(emptyList()) { book ->
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .add(R.id.detail_container, BookDetailFragment.newInstance(book))
+                .addToBackStack(null)
+                .commit()
+        }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
