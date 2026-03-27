@@ -32,6 +32,16 @@ class BookDetailFragment : Fragment(R.layout.fragment_book_detail) {
 
         view.findViewById<MaterialToolbar>(R.id.toolbar_detail).apply {
             setNavigationOnClickListener { parentFragmentManager.popBackStack() }
+            inflateMenu(R.menu.menu_book_detail)
+            setOnMenuItemClickListener { item ->
+                if (item.itemId == R.id.action_edit) {
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.detail_container, AddBookFragment.newInstance(book))
+                        .addToBackStack(null)
+                        .commit()
+                    true
+                } else false
+            }
         }
 
         val cover = view.findViewById<ShapeableImageView>(R.id.iv_cover)
@@ -61,7 +71,6 @@ class BookDetailFragment : Fragment(R.layout.fragment_book_detail) {
         view.findViewById<TextView>(R.id.tv_pages_value).text =
             if (book.pages > 0) book.pages.toString() else "—"
         view.findViewById<TextView>(R.id.tv_date_value).text = book.completionDate ?: "—"
-        view.findViewById<TextView>(R.id.tv_synopsis).text = book.synopsis ?: "—"
         view.findViewById<TextView>(R.id.tv_review).text = book.review ?: "—"
     }
 }

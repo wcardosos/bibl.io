@@ -1,10 +1,12 @@
 package com.example.biblio.model
 
 import android.os.Parcelable
+import com.google.firebase.firestore.DocumentId
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Book(
+    @DocumentId val id: String = "",
     val title: String = "",
     val author: String = "",
     val pages: Int = 0,
