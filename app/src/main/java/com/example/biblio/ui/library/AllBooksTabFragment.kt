@@ -2,6 +2,8 @@ package com.example.biblio.ui.library
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +16,7 @@ class AllBooksTabFragment : Fragment(R.layout.fragment_all_books_tab) {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        val emptyState = view.findViewById<TextView>(R.id.empty_state)
         val adapter = BookAdapter(emptyList()) { book ->
             requireActivity().supportFragmentManager
                 .beginTransaction()
@@ -27,6 +30,8 @@ class AllBooksTabFragment : Fragment(R.layout.fragment_all_books_tab) {
         val viewModel = ViewModelProvider(requireActivity())[BookViewModel::class.java]
         viewModel.books.observe(viewLifecycleOwner) { books ->
             adapter.updateBooks(books)
+            recyclerView.isVisible = books.isNotEmpty()
+            emptyState.isVisible = books.isEmpty()
         }
     }
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.biblio.model.Book
 import com.example.biblio.repository.BookRepository
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class BookViewModel(application: Application) : AndroidViewModel(application) {
@@ -19,7 +20,8 @@ class BookViewModel(application: Application) : AndroidViewModel(application) {
         data class Error(val message: String) : AddBookState()
     }
 
-    private val repository = BookRepository(application)
+    private val uid = FirebaseAuth.getInstance().currentUser!!.uid
+    private val repository = BookRepository(application, uid)
 
     val books: LiveData<List<Book>> = repository.getBooksLiveData()
 

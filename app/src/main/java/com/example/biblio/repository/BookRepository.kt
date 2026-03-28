@@ -15,12 +15,15 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.util.UUID
 
-class BookRepository(private val context: Context) {
+class BookRepository(private val context: Context, private val uid: String) {
     private val db = Firebase.firestore
+
+    private fun booksCollection() =
+        db.collection("users").document(uid).collection("books")
 
     fun getBooksLiveData(): LiveData<List<Book>> {
         val liveData = MutableLiveData<List<Book>>()
-        db.collection("books").addSnapshotListener { snapshot, _ ->
+        booksCollection().addSnapshotListener { snapshot, _ ->
             val books = snapshot?.toObjects(Book::class.java) ?: emptyList()
             liveData.value = books
         }
@@ -30,7 +33,7 @@ class BookRepository(private val context: Context) {
     suspend fun updateBook(book: Book, coverUri: Uri?): Result<Unit> {
         return try {
             val coverUrl = if (coverUri != null) saveCoverLocally(coverUri) else book.coverUrl
-            db.collection("books").document(book.id).set(book.copy(coverUrl = coverUrl)).await()
+            booksCollection().document(book.id).set(book.copy(coverUrl = coverUrl)).await()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -41,7 +44,7 @@ class BookRepository(private val context: Context) {
         return try {
             val coverUrl = if (coverUri != null) saveCoverLocally(coverUri) else ""
             val bookWithCover = book.copy(coverUrl = coverUrl)
-            db.collection("books").add(bookWithCover).await()
+            booksCollection().add(bookWithCover).await()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

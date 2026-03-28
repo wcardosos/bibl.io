@@ -16,4 +16,15 @@
     <string name="read_books_tab_content">Livros que já li</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Login -->
+    <string name="login_subtitle">Sua estante digital</string>
+    <string name="login_btn_google">Entrar com Google</string>
+    <string name="login_error_no_network">Sem conexão com a internet</string>
+    <string name="login_error_retry">Tentar novamente</string>
+    <string name="login_error_auth">Erro ao autenticar. Tente novamente.</string>
+
+    <!-- User menu -->
+    <string name="menu_logout">Sair</string>
+    <string name="menu_profile">Perfil</string>
 </resources>
