@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // RF-003: Auth guard — nenhuma tela acessível sem autenticação válida
         if (FirebaseAuth.getInstance().currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -45,7 +44,6 @@ class MainActivity : AppCompatActivity() {
 
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
 
-        // RF-004: Avatar circular do usuário na toolbar
         toolbar.inflateMenu(R.menu.menu_main_toolbar)
         val avatarView = toolbar.menu.findItem(R.id.action_avatar)
             .actionView!!.findViewById<ShapeableImageView>(R.id.iv_avatar)
@@ -57,7 +55,6 @@ class MainActivity : AppCompatActivity() {
             transformations(CircleCropTransformation())
         }
 
-        // RF-005: Menu de contexto com logout ao clicar no avatar
         avatarView.setOnClickListener { view ->
             PopupMenu(this, view).apply {
                 inflate(R.menu.menu_user_avatar)
@@ -111,7 +108,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // RF-006: Logout — encerra sessão Firebase e Google, limpa cache, redireciona para login
     private fun performLogout() {
         FirebaseAuth.getInstance().signOut()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -119,8 +115,6 @@ class MainActivity : AppCompatActivity() {
             .requestEmail()
             .build()
         GoogleSignIn.getClient(this, gso).signOut().addOnCompleteListener {
-            // Limpa cache do app (SharedPreferences, cache do Firestore, dados em memória)
-            // Imagens em filesDir/covers são mantidas intencionalmente (RF-006)
             cacheDir.deleteRecursively()
 
             startActivity(Intent(this, LoginActivity::class.java).apply {

@@ -36,7 +36,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // RF-002: Silent sign-in — se já estiver autenticado, vai direto para a tela principal
         if (auth.currentUser != null) {
             goToMain()
             return
@@ -45,7 +44,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // RF-010: Verificação de conectividade
         if (!isNetworkAvailable()) {
             binding.btnGoogleSignIn.isEnabled = false
             Snackbar.make(binding.root, getString(R.string.login_error_no_network), Snackbar.LENGTH_INDEFINITE)
@@ -83,7 +81,6 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser!!
-                    // RF-007: Upsert do documento do usuário — não bloqueia o login
                     lifecycleScope.launch {
                         runCatching { UserRepository().upsertUser(user) }
                             .onFailure { Log.e(TAG, "Falha ao salvar dados do usuário", it) }

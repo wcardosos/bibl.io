@@ -40,6 +40,15 @@ class BookRepository(private val context: Context, private val uid: String) {
         }
     }
 
+    suspend fun deleteBook(book: Book): Result<Unit> {
+        return try {
+            booksCollection().document(book.id).delete().await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun addBook(book: Book, coverUri: Uri?): Result<Unit> {
         return try {
             val coverUrl = if (coverUri != null) saveCoverLocally(coverUri) else ""

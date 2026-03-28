@@ -6,12 +6,15 @@ import android.view.View
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.biblio.R
 import com.example.biblio.model.Book
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.snackbar.Snackbar
 import coil.load
 
 class BookDetailFragment : Fragment(R.layout.fragment_book_detail) {
@@ -24,6 +27,10 @@ class BookDetailFragment : Fragment(R.layout.fragment_book_detail) {
         }
     }
 
+    private val viewModel by lazy {
+        ViewModelProvider(requireActivity())[BookViewModel::class.java]
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -34,13 +41,20 @@ class BookDetailFragment : Fragment(R.layout.fragment_book_detail) {
             setNavigationOnClickListener { parentFragmentManager.popBackStack() }
             inflateMenu(R.menu.menu_book_detail)
             setOnMenuItemClickListener { item ->
-                if (item.itemId == R.id.action_edit) {
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.detail_container, AddBookFragment.newInstance(book))
-                        .addToBackStack(null)
-                        .commit()
-                    true
-                } else false
+                when (item.itemId) {
+                    R.id.action_edit -> {
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.detail_container, AddBookFragment.newInstance(book))
+                            .addToBackStack(null)
+                            .commit()
+                        true
+                    }
+                    R.id.action_delete -> {
+                        showDeleteConfirmationDialog(book)
+                        true
+                    }
+                    else -> false
+                }
             }
         }
 
@@ -72,5 +86,34 @@ class BookDetailFragment : Fragment(R.layout.fragment_book_detail) {
             if (book.pages > 0) book.pages.toString() else "—"
         view.findViewById<TextView>(R.id.tv_date_value).text = book.completionDate ?: "—"
         view.findViewById<TextView>(R.id.tv_review).text = book.review ?: "—"
+
+        observeDeleteState(view)
+    }
+
+    private fun showDeleteConfirmationDialog(book: Book) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.delete_book_title))
+            .setMessage(getString(R.string.delete_book_message))
+            .setNegativeButton(getString(R.string.delete_book_cancel), null)
+            .setPositiveButton(getString(R.string.delete_book_confirm)) { _, _ ->
+                viewModel.deleteBook(book)
+            }
+            .show()
+    }
+
+    private fun observeDeleteState(view: View) {
+        viewModel.deleteBookState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is BookViewModel.AddBookState.Success -> {
+                    viewModel.resetDeleteBookState()
+                    parentFragmentManager.popBackStack()
+                }
+                is BookViewModel.AddBookState.Error -> {
+                    Snackbar.make(view, getString(R.string.delete_book_error), Snackbar.LENGTH_LONG).show()
+                    viewModel.resetDeleteBookState()
+                }
+                else -> {}
+            }
+        }
     }
 }

@@ -53,4 +53,22 @@ class BookViewModel(application: Application) : AndroidViewModel(application) {
     fun resetAddBookState() {
         _addBookState.value = AddBookState.Idle
     }
+
+    private val _deleteBookState = MutableLiveData<AddBookState>(AddBookState.Idle)
+    val deleteBookState: LiveData<AddBookState> = _deleteBookState
+
+    fun deleteBook(book: Book) {
+        _deleteBookState.value = AddBookState.Loading
+        viewModelScope.launch {
+            val result = repository.deleteBook(book)
+            _deleteBookState.value = result.fold(
+                onSuccess = { AddBookState.Success },
+                onFailure = { AddBookState.Error(it.message ?: "Erro desconhecido") }
+            )
+        }
+    }
+
+    fun resetDeleteBookState() {
+        _deleteBookState.value = AddBookState.Idle
+    }
 }

@@ -1,11 +1,9 @@
 <resources>
     <string name="app_name">bibl.io</string>
 
-    <!-- Main activity -->
     <string name="main_activity_title">Minha estante</string>
     <string name="search_view_input_placeholder">Pesquisar</string>
 
-    <!-- Books status tabs -->
     <string name="all_books_tab">Todos</string>
     <string name="all_books_tab_content">Todos os livros que já li</string>
     <string name="wished_books_tab">Quero ler</string>
@@ -14,17 +12,20 @@
     <string name="reading_books_tab_content">Livros que estou lendo</string>
     <string name="read_books_tab">Lidos</string>
     <string name="read_books_tab_content">Livros que já li</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- Login -->
     <string name="login_subtitle">Sua estante digital</string>
     <string name="login_btn_google">Entrar com Google</string>
     <string name="login_error_no_network">Sem conexão com a internet</string>
     <string name="login_error_retry">Tentar novamente</string>
     <string name="login_error_auth">Erro ao autenticar. Tente novamente.</string>
 
-    <!-- User menu -->
     <string name="menu_logout">Sair</string>
     <string name="menu_profile">Perfil</string>
+
+    <string name="delete_book_title">Excluir livro</string>
+    <string name="delete_book_message">Tem certeza que deseja excluir este livro? Esta ação não pode ser desfeita.</string>
+    <string name="delete_book_confirm">Excluir</string>
+    <string name="delete_book_cancel">Cancelar</string>
+    <string name="delete_book_error">Erro ao excluir o livro. Tente novamente.</string>
 </resources>
